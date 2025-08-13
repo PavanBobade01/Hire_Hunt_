@@ -1,0 +1,48 @@
+package io.github.pavanbobade01.HireHunt.service;
+
+import io.github.pavanbobade01.HireHunt.entity.Job;
+import io.github.pavanbobade01.HireHunt.repository.JobRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class JobService {
+
+    @Autowired
+    private JobRepository jobRepository;
+
+    public Job createJob(Job job) {
+        return jobRepository.save(job);
+    }
+
+    public List<Job> getAllJobs() {
+        return jobRepository.findAll();
+    }
+
+    public Optional<Job> getJobById(String id) {
+        return jobRepository.findById(id);
+    }
+
+    public Job updateJob(String id, Job jobDetails) {
+        Optional<Job> optionalJob = jobRepository.findById(id);
+        if (optionalJob.isPresent()) {
+            Job existingJob = optionalJob.get();
+            existingJob.setTitle(jobDetails.getTitle());
+            existingJob.setCompany(jobDetails.getCompany());
+            existingJob.setDescription(jobDetails.getDescription());
+            existingJob.setSalaryRange(jobDetails.getSalaryRange());
+            existingJob.setLocation(jobDetails.getLocation());
+            existingJob.setJobType(jobDetails.getJobType());
+
+            return jobRepository.save(existingJob);
+        }
+        return null;
+    }
+
+    public void deleteJob(String id) {
+        jobRepository.deleteById(id);
+    }
+}
